@@ -6,19 +6,21 @@ from datetime import datetime
 
 class ExpenseTrackerLogic:
 
-    def __init__(self, balance, transaction_history: list):
+    def __init__(self, balance, transaction_history: list, passbook: dict):
         assert balance >= 0, f"Balance {balance} cannot be less that 0"
         self.balance = balance
-        self.transaction_history = transaction_history        
+        self.transaction_history = transaction_history
+        self.passbook = passbook
 
     def current_time(self):
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
         return current_time
-
+            
     def deposit(self, money, date):
         self.balance += money
         time = self.current_time()
+        # self.passbook.update({date + time: money})
         self.transaction_history.append(f"deposited {money} on {date} at " + time)
 
     def expenses(self, money, date):
@@ -27,26 +29,30 @@ class ExpenseTrackerLogic:
         else:
             self.balance -= money
             time = self.current_time()
+            # self.passbook.update({date + time: "-" + money})
             self.transaction_history.append(f"withdrew {money} on {date} at " + time)
 
     def get_balance(self):
-        print(str(self.balance))
+        balance = self.balance
+        print("Balance: " + str(balance) + "\n")
 
     def print_statement(self):
         print(self.transaction_history)
 
+    # def print_passbook(self):
 
+ 
 class ExpenseTrackerGUI(ExpenseTrackerLogic):
 
-    def __init__(self, balance, transaction_history: list):
-        super().__init__(balance, transaction_history)
+    def __init__(self, balance, transaction_history: list, passbook: dict):
+        super().__init__(balance, transaction_history, passbook)
         window = Tk()
         window.title("MyCash")
         window.geometry('700x700')
         self.money = IntVar()
 
         self.window_label = Label(window, font='ariel 50 bold',
-                                  text='MyCash', bg='black', fg='white', bd=15, )
+                                  text='MyCash', bg='black', fg='white', bd=15,)
         self.window_label.place(x=180, y=250)
         self.window_label2 = Label(window, font='ariel 35 bold',
                                    text='Expense Tracker', bg='black',
@@ -80,7 +86,7 @@ class ExpenseTrackerGUI(ExpenseTrackerLogic):
         self.option2 = Button(self.NavBar, text='EXPENSES', font='ariel 18 bold', bg='black', fg='white',
                               activebackground='gray', activeforeground='white', bd=0,
                               command=self.expensesf).place(x=25, y=120)
-
+        
         # NavBar close button
         self.close_btn = Button(self.NavBar, image=self.close_icon,
                                 bg='white', bd=0, command=self.switch)
@@ -121,11 +127,18 @@ class ExpenseTrackerGUI(ExpenseTrackerLogic):
         self.switch()
         self.home_frame.pack(fill="both", expand=1)
 
-        balance_display = Text(self.home_frame, width=30, height=3)
-        balance_display.grid(row=0, column=0, padx=1,
-                             pady=1, columnspan=3)
+        balance_display = Text(self.home_frame, width=30, height=10)
+        balance_display.pack(fill=tkinter.X, padx=5, pady=15)
 
-        balance_display.insert(END, self.balance())
+        statement_display = Text(self.home_frame, width=30, height=10)
+        statement_display.pack(fill=tkinter.X, padx=5, pady=15)
+
+        # btn_balance = Button(self.home_frame, width=9, height=3, text="Show Balance",
+        #                      command=show_balance)
+        # btn_balance.grid(row=1, column=0, padx=1, pady=1)
+
+        balance_display.insert(END, str(self.get_balance()))
+        statement_display.insert(END, str(self.print_statement()))
 
     def expensesf(self):
         self.hide_frames()
@@ -161,5 +174,9 @@ class ExpenseTrackerGUI(ExpenseTrackerLogic):
         self.home_frame.pack_forget()
         self.expenses_frame.pack_forget()
 
+    # def print_statement2(self):
+    #     statement = self.print_statement()
+    #     self.balance_label["text"] = statement
 
-ExpenseTrackerGUI(0, [])
+
+ExpenseTrackerGUI(0, [], {})

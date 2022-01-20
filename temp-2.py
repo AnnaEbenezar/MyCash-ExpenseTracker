@@ -4,42 +4,48 @@ from tkcalendar import DateEntry
 from datetime import datetime
 
 
-class ExpenseTrackerLogic:
+# class ExpenseTrackerLogic:
+#
+#     def __init__(self, balance, transaction_history: list, passbook: dict):
+#         assert balance >= 0, f"Balance {balance} cannot be less that 0"
+#         self.balance = balance
+#         self.transaction_history = transaction_history
+#         self.passbook = passbook
+#
+#     def current_time(self):
+#         now = datetime.now()
+#         current_time = now.strftime("%H:%M:%S")
+#         return current_time
+#
+#     def deposit(self, money, date):
+#         self.balance += money
+#         time = self.current_time()
+#         self.transaction_history.append(f"deposited {money} on {date} at " + time)
+#
+#     def expenses(self, money, date):
+#         if self.balance - money < 0:
+#             print("Can't spend money you dont have!")
+#         else:
+#             self.balance -= money
+#             time = self.current_time()
+#             self.transaction_history.append(f"withdrew {money} on {date} at " + time)
+#
+#     def get_balance(self):
+#         balance = self.balance
+#         print("Balance: " + str(balance) + "\n")
+#
+#     def print_statement(self):
+#         print(self.transaction_history)
+
+
+
+class ExpenseTrackerGUI():
 
     def __init__(self, balance, transaction_history: list):
         assert balance >= 0, f"Balance {balance} cannot be less that 0"
         self.balance = balance
-        self.transaction_history = transaction_history        
-
-    def current_time(self):
-        now = datetime.now()
-        current_time = now.strftime("%H:%M:%S")
-        return current_time
-
-    def deposit(self, money, date):
-        self.balance += money
-        time = self.current_time()
-        self.transaction_history.append(f"deposited {money} on {date} at " + time)
-
-    def expenses(self, money, date):
-        if self.balance - money < 0:
-            print("Can't spend money you dont have!")
-        else:
-            self.balance -= money
-            time = self.current_time()
-            self.transaction_history.append(f"withdrew {money} on {date} at " + time)
-
-    def get_balance(self):
-        print(str(self.balance))
-
-    def print_statement(self):
-        print(self.transaction_history)
-
-
-class ExpenseTrackerGUI(ExpenseTrackerLogic):
-
-    def __init__(self, balance, transaction_history: list):
-        super().__init__(balance, transaction_history)
+        self.transaction_history = transaction_history
+        
         window = Tk()
         window.title("MyCash")
         window.geometry('700x700')
@@ -121,11 +127,18 @@ class ExpenseTrackerGUI(ExpenseTrackerLogic):
         self.switch()
         self.home_frame.pack(fill="both", expand=1)
 
-        balance_display = Text(self.home_frame, width=30, height=3)
-        balance_display.grid(row=0, column=0, padx=1,
-                             pady=1, columnspan=3)
+        balance_display = Text(self.home_frame, width=30, height=10)
+        balance_display.pack(fill=tkinter.X, padx=5, pady=15)
 
-        balance_display.insert(END, self.balance())
+        statement_display = Text(self.home_frame, width=30, height=10)
+        statement_display.pack(fill=tkinter.X, padx=5, pady=15)
+
+        # btn_balance = Button(self.home_frame, width=9, height=3, text="Show Balance",
+        #                      command=show_balance)
+        # btn_balance.grid(row=1, column=0, padx=1, pady=1)
+
+        balance_display.insert(END, str(self.get_balance()))
+        statement_display.insert(END, str(self.print_statement()))
 
     def expensesf(self):
         self.hide_frames()
@@ -160,6 +173,31 @@ class ExpenseTrackerGUI(ExpenseTrackerLogic):
     def hide_frames(self):
         self.home_frame.pack_forget()
         self.expenses_frame.pack_forget()
+
+    def current_time(self):
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        return current_time
+
+    def deposit(self, money, date):
+        self.balance += money
+        time = self.current_time()
+        self.transaction_history.append(f"deposited {money} on {date} at " + time)
+
+    def expenses(self, money, date):
+        if self.balance - money < 0:
+            print("Can't spend money you dont have!")
+        else:
+            self.balance -= money
+            time = self.current_time()
+            self.transaction_history.append(f"withdrew {money} on {date} at " + time)
+
+    def get_balance(self):
+        balance = self.balance
+        print("Balance: " + str(balance) + "\n")
+
+    def print_statement(self):
+        print(self.transaction_history)
 
 
 ExpenseTrackerGUI(0, [])

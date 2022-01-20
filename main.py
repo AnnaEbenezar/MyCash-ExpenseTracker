@@ -2,7 +2,12 @@ from kivy.app import App
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.stacklayout import StackLayout
 from kivy.uix.widget import Widget
+
+
+class StackLayoutExample(StackLayout):
+    pass
 
 
 class GridLayoutExample(GridLayout):

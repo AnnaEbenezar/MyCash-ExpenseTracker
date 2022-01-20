@@ -1,14 +1,37 @@
-AnchorLayoutExample:
+StackLayoutExample:
+
+
+<StackLayoutExample>
+    #left-right / top-bottom
+    orientation:
+    Button:
+        text: "A "
+
+
+<GridLayoutExample>
+    #rows
+    #cols
+    cols: 2
+    Button:
+        text: "A"
+        #size_hint:
+    Button:
+        text: "B"
+    BoxLayoutExample
 
 
 <AnchorLayoutExample>:
     #right, left, center
-    anchor_x:
+    anchor_x: "center"
     #bottom, top, center
-    anchor_y:
+    anchor_y: "top"
     #size_hint: width, height
-    Button:
-        text: "A"
+    BoxLayout:
+        size_hint: .2, .2
+        Button:
+            text: "A"
+        Button:
+            text: "B"
 
 
 <BoxLayoutExample>:
@@ -41,6 +64,6 @@ AnchorLayoutExample:
         pos: "100dp", "200dp"
 
     Label:
-        text: "HEHE"
+        text: "HEH"
         size: "100dp", "100dp"
         pos: "200dp", "400dp"
